@@ -1,0 +1,30 @@
+# Process Scheduling Simulator - Sample Input
+# This sample exercises every feature of the simulator (Round-Robin, system process,
+# CPU affinity, virtual memory) without pathological thrashing: the working set fits
+# in RAM most of the time and processes terminate early enough to free memory before
+# new ones overwhelm the system.
+#
+# Lines starting with # are comments. Blank lines are ignored.
+# Each parameter goes on its own line: <key> <value>
+
+processors 2
+ram        100
+slice    4
+sysPeriod  20
+diskRate   10
+
+# User processes:
+#   process <releaseTime> <memorySize> <burst1> [<syscall1> <burst2> ...]
+# The numbers after memorySize are an alternating sequence of bursts and syscalls,
+# always starting and ending with a burst (odd count). Process IDs are assigned
+# in order of appearance starting at 0.
+
+# Two short processes - both fit in RAM together (35 + 40 = 75)
+process  0  35  5 2 3
+process  2  40  4 1 6
+
+# A small process that arrives later, requires evicting one of the above
+process 15  25  8 3 4 4 5
+
+# A larger process arriving after the first two terminate
+process 25  60  3 2 5 4 4

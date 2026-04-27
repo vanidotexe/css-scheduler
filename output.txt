@@ -1,0 +1,34 @@
+# Process Scheduling Simulator - Execution log
+# Total simulated time: 52
+
+=== CPU0 ===
+  [    4 -     8]  USER_BURST    P0 burst#0
+  [    8 -     9]  USER_BURST    P0 burst#0
+  [    9 -    11]  SYS_CALL      syscall for P0 
+  [   11 -    14]  USER_BURST    P0 burst#1
+  [   18 -    22]  USER_BURST    P2 burst#0
+  [   22 -    26]  USER_BURST    P2 burst#0
+  [   26 -    29]  SYS_CALL      syscall for P2 
+  [   29 -    33]  USER_BURST    P2 burst#1
+  [   33 -    37]  SYS_CALL      syscall for P2 
+  [   37 -    39]  SYS_CALL      syscall for P3 
+  [   39 -    43]  USER_BURST    P3 burst#1
+  [   43 -    44]  USER_BURST    P3 burst#1
+  [   44 -    48]  SYS_CALL      syscall for P3 
+  [   48 -    52]  USER_BURST    P3 burst#2
+
+=== CPU1 ===
+  [    8 -    12]  USER_BURST    P1 burst#0
+  [   12 -    13]  SYS_CALL      syscall for P1 
+  [   13 -    17]  USER_BURST    P1 burst#1
+  [   17 -    19]  USER_BURST    P1 burst#1
+  [   31 -    34]  USER_BURST    P3 burst#0
+  [   37 -    41]  USER_BURST    P2 burst#2
+  [   41 -    42]  USER_BURST    P2 burst#2
+
+=== DISK ===
+  [    0 -     4]  SWAP_IN       load P0 into RAM
+  [    4 -     8]  SWAP_IN       load P1 into RAM
+  [   15 -    18]  SWAP_IN       load P2 into RAM
+  [   25 -    31]  SWAP_IN       load P3 into RAM
+

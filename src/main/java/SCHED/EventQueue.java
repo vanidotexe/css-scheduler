@@ -1,18 +1,10 @@
 package SCHED;
 
-/**
- * Min-heap (priority queue) of pending events, keyed on (time, seq) for
- * deterministic ordering.
- *
- * Hand-rolled binary heap stored in a dynamically-grown array. The simulation
- * requirements forbid the use of library functions for the simulator logic, so
- * we don't use java.util.PriorityQueue here.
- */
 public class EventQueue {
 
     private Event[] heap;
     private int size;
-    private long nextSeq;       // injected into events at enqueue time
+    private long nextSeq;
 
     public EventQueue() {
         this.heap = new Event[16];
@@ -50,7 +42,6 @@ public class EventQueue {
         return size == 0 ? null : heap[0];
     }
 
-    // -------- internals --------
     private void grow() {
         Event[] nh = new Event[heap.length * 2];
         for (int i = 0; i < heap.length; i++) nh[i] = heap[i];

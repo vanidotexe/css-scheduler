@@ -4,10 +4,6 @@ import MODEL.UserProcess;
 
 import java.util.List;
 
-/**
- * Simulation parameters plus the list of user processes, parsed from the input file.
- * Used as a simple data carrier from InputReader to Simulation.
- */
 public class SimulationConfig {
 
     public final int processors;

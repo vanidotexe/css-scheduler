@@ -4,10 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-/**
- * Main window for the simulator GUI: wraps a GanttPanel inside a scroll pane so
- * long simulations remain navigable.
- */
 public class MainFrame extends JFrame {
 
     public MainFrame(Logger logger) {

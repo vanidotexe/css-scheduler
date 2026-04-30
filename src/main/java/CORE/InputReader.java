@@ -9,25 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Parses the simulator input file.
- *
- * Format: line-based, whitespace-separated tokens.
- *   Comments: lines starting with '#'
- *   Blank lines: ignored
- *
- *   Parameters (each on its own line):
- *     processors <int>
- *     ram        <int>
- *     slice      <int>
- *     sysPeriod  <int>
- *     diskRate   <int>
- *
- *   Each process:
- *     process <releaseTime> <memorySize> <burst1> [<syscall1> <burst2> ...]
- *   The burst/syscall sequence must contain an odd number of values (starts and ends with a burst).
- *   Process IDs are assigned in order of appearance, starting at 0.
- */
 public class InputReader {
 
     public SimulationConfig read(String path) {
@@ -91,7 +72,6 @@ public class InputReader {
     }
 
     private UserProcess parseProcess(String[] tok, int lineNo, int id) {
-        // tokens: process <release> <memory> <burst> [<syscall> <burst> ...]
         if (tok.length < 4) {
             throw new SimulationException("Line " + lineNo + ": process needs at least release, memory, and one burst");
         }
@@ -115,7 +95,6 @@ public class InputReader {
         int[] bursts   = new int[nBursts];
         int[] syscalls = new int[nSyscalls];
 
-        // Sequence layout: B S B S ... B
         for (int i = 0; i < seqLen; i++) {
             int v;
             try { v = Integer.parseInt(tok[3 + i]); }

@@ -2,14 +2,6 @@ package SCHED;
 
 import MODEL.UserProcess;
 
-/**
- * FIFO queue of ready user processes, used for Round-Robin scheduling.
- * Hand-written singly-linked list (no java.util container used for the simulation logic).
- *
- * Round-Robin semantics: a newly-ready process is added at the tail; the scheduler
- * pulls from the head when it needs the next process to dispatch. A preempted process
- * goes back to the tail.
- */
 public class ReadyQueue {
 
     private static class Node {
@@ -37,7 +29,6 @@ public class ReadyQueue {
         size++;
     }
 
-    /** Push at the head. Used to put back a process that the scheduler had to defer. */
     public void addFirst(UserProcess p) {
         assert p != null;
         Node n = new Node(p);

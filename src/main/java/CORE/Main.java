@@ -8,17 +8,6 @@ import UTILS.SimulationException;
 import javax.swing.SwingUtilities;
 import java.awt.GraphicsEnvironment;
 
-/**
- * Entry point. Usage:
- *   java CORE.Main <input-file> [<output-text-file>] [<output-png-file>]
- *
- * The simulation always writes a text log and a PNG of the Gantt chart, then
- * (if a display is available) opens a Swing window with the same chart.
- *
- * Defaults:
- *   <output-text-file>  output.txt
- *   <output-png-file>   output.png
- */
 public class Main {
 
     public static void main(String[] args) {

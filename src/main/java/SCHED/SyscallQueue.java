@@ -2,9 +2,6 @@ package SCHED;
 
 import MODEL.SystemProcess;
 
-/**
- * FIFO queue of pending system calls. Hand-written linked list.
- */
 public class SyscallQueue {
 
     private static class Node {

@@ -7,15 +7,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Writes the simulation timeline as a text file. The output is grouped by
- * resource (each CPU lane and the disk lane) and within each lane the entries
- * are sorted by start time.
- */
 public class TextWriter {
 
     public void write(Logger logger, String path) {
-        // Group entries by resource
         java.util.Map<String, List<Logger.Entry>> byRes = new java.util.LinkedHashMap<>();
         for (Logger.Entry e : logger.getEntries()) {
             byRes.computeIfAbsent(e.resource, k -> new ArrayList<>()).add(e);
@@ -26,7 +20,6 @@ public class TextWriter {
             pw.println("# Total simulated time: " + logger.endTime());
             pw.println();
 
-            // Stable order: CPUs first by id, then DISK
             List<String> resources = new ArrayList<>(byRes.keySet());
             resources.sort((a, b) -> {
                 boolean ad = a.equals("DISK"), bd = b.equals("DISK");

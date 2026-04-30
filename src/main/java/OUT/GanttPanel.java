@@ -13,15 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Swing panel that draws a Gantt chart of the simulation timeline.
- *
- * One horizontal lane per resource (each CPU plus DISK). Each Logger.Entry is
- * drawn as a colored rectangle in its lane. The X axis is simulation time.
- *
- * NOTE: per the project requirements, libraries are allowed for the GUI only;
- * this file uses Swing/AWT freely.
- */
 public class GanttPanel extends JPanel {
 
     private static final int PAD_LEFT = 80;
@@ -43,14 +34,12 @@ public class GanttPanel extends JPanel {
 
     private Dimension computePreferredSize() {
         long total = Math.max(1, logger.endTime());
-        // Aim for ~10 px per time unit, capped between 800 and 2000 wide
         int w = PAD_LEFT + PAD_RIGHT + (int) Math.min(2000, Math.max(800, total * 10));
         int h = PAD_TOP + PAD_BOTTOM + orderedResources.size() * (LANE_HEIGHT + LANE_GAP);
         return new Dimension(w, h);
     }
 
     private static List<String> collectResources(Logger logger) {
-        // Preserve insertion order, then put CPUs first sorted, DISK last.
         Map<String, Boolean> seen = new LinkedHashMap<>();
         for (Logger.Entry e : logger.getEntries()) seen.putIfAbsent(e.resource, true);
         List<String> all = new ArrayList<>(seen.keySet());
@@ -73,10 +62,8 @@ public class GanttPanel extends JPanel {
         int w = getWidth();
         int h = getHeight();
         int chartW = w - PAD_LEFT - PAD_RIGHT;
-        // computed in paintComponent
         double pxPerUnit = chartW / (double) total;
 
-        // Resource labels and lane backgrounds
         g2.setFont(getFont().deriveFont(Font.BOLD, 12f));
         for (int i = 0; i < orderedResources.size(); i++) {
             int laneY = PAD_TOP + i * (LANE_HEIGHT + LANE_GAP);
@@ -86,7 +73,6 @@ public class GanttPanel extends JPanel {
             g2.drawString(orderedResources.get(i), 10, laneY + LANE_HEIGHT / 2 + 5);
         }
 
-        // Bars
         for (Logger.Entry e : logger.getEntries()) {
             int laneIdx = orderedResources.indexOf(e.resource);
             if (laneIdx < 0) continue;
@@ -101,7 +87,6 @@ public class GanttPanel extends JPanel {
             g2.setStroke(new BasicStroke(1f));
             g2.drawRect(x0, laneY + 5, barW, LANE_HEIGHT - 10);
 
-            // Label inside bar (only if it fits)
             String label = labelFor(e);
             g2.setFont(getFont().deriveFont(Font.PLAIN, 11f));
             int textW = g2.getFontMetrics().stringWidth(label);
@@ -111,13 +96,11 @@ public class GanttPanel extends JPanel {
             }
         }
 
-        // Time axis at the bottom
         int axisY = PAD_TOP + orderedResources.size() * (LANE_HEIGHT + LANE_GAP) + 5;
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(1f));
         g2.drawLine(PAD_LEFT, axisY, PAD_LEFT + chartW, axisY);
 
-        // Tick marks
         long tickStep = pickTickStep(total);
         g2.setFont(getFont().deriveFont(Font.PLAIN, 10f));
         for (long t = 0; t <= total; t += tickStep) {
@@ -131,7 +114,6 @@ public class GanttPanel extends JPanel {
     }
 
     private static long pickTickStep(long total) {
-        // Aim for ~10 ticks
         long target = Math.max(1, total / 10);
         long step = 1;
         while (step < target) {
@@ -163,7 +145,6 @@ public class GanttPanel extends JPanel {
         }
     }
 
-    // A small palette for user processes
     private static final Color[] USER_COLORS = {
             new Color(255, 200, 200),
             new Color(200, 255, 200),

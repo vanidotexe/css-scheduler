@@ -2,15 +2,9 @@ package HW;
 
 import MODEL.UserProcess;
 
-/**
- * Single-resource disk. Transfers (swap-in / swap-out) execute serially in FIFO order.
- * Transfer time = (memorySize / transferRate), rounded up.
- *
- * Implemented as a hand-rolled singly-linked queue.
- */
 public class Disk {
 
-    public enum Direction { OUT, IN }   // OUT = write to disk (eviction); IN = read from disk (load)
+    public enum Direction { OUT, IN }
 
     public static class Transfer {
         public final UserProcess process;
@@ -24,10 +18,10 @@ public class Disk {
         Node(Transfer t) { this.t = t; }
     }
 
-    private final int rate;          // bytes per time unit
-    private Node head;               // currently-active transfer is head
+    private final int rate;
+    private Node head;
     private Node tail;
-    private boolean inProgress;      // true while head is actually being processed
+    private boolean inProgress;
 
     public Disk(int rate) {
         assert rate > 0;
@@ -39,12 +33,10 @@ public class Disk {
     public boolean isEmpty() { return head == null; }
     public Transfer peekHead() { return head == null ? null : head.t; }
 
-    /** Compute how long a transfer of `size` bytes will take (rounded up). */
     public long computeDuration(int size) {
         return (size + rate - 1) / rate;
     }
 
-    /** Enqueue a new transfer. Returns true if it became the head and should start now. */
     public boolean enqueue(Transfer t) {
         Node n = new Node(t);
         if (tail == null) {
@@ -60,7 +52,6 @@ public class Disk {
         return false;
     }
 
-    /** Mark the head transfer as finished. Returns the finished Transfer. */
     public Transfer completeHead() {
         assert inProgress : "completeHead() but disk is not busy";
         Transfer done = head.t;

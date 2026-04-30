@@ -3,18 +3,10 @@ package SCHED;
 import MODEL.UserProcess;
 import HW.Disk;
 
-/**
- * Base class for all events in the discrete-event simulation.
- *
- * The concrete subtypes are nested inside as static classes to keep the file
- * count low. Each event carries the simulated time at which it should fire and
- * a sequence number used to break ties deterministically (FIFO across events
- * scheduled with the same timestamp).
- */
 public abstract class Event implements Comparable<Event> {
 
     public final long time;
-    public final long seq;          // monotonically increasing, set by EventQueue
+    public final long seq;
 
     protected Event(long time, long seq) {
         assert time >= 0;
@@ -28,11 +20,6 @@ public abstract class Event implements Comparable<Event> {
         return Long.compare(this.seq, o.seq);
     }
 
-    // ---------------------------------------------------------------
-    // Concrete event subtypes
-    // ---------------------------------------------------------------
-
-    /** A user process is born (transitions from NEW to READY). */
     public static class ProcessRelease extends Event {
         public final UserProcess process;
         public ProcessRelease(long time, long seq, UserProcess p) {
@@ -41,17 +28,10 @@ public abstract class Event implements Comparable<Event> {
         }
     }
 
-    /** Periodic launch of a fresh system-process instance. */
     public static class SysRelease extends Event {
         public SysRelease(long time, long seq) { super(time, seq); }
     }
 
-    /**
-     * The currently-running task on a CPU has reached its scheduled end time.
-     * For a user process this means: either the time slice expired, or the
-     * current burst finished, whichever came first.
-     * For the system process this means: the current syscall finished.
-     */
     public static class DispatchEnd extends Event {
         public final int cpuId;
         public DispatchEnd(long time, long seq, int cpuId) {
@@ -60,7 +40,6 @@ public abstract class Event implements Comparable<Event> {
         }
     }
 
-    /** A disk transfer finished. */
     public static class TransferDone extends Event {
         public final Disk.Transfer transfer;
         public TransferDone(long time, long seq, Disk.Transfer t) {

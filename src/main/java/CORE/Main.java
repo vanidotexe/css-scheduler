@@ -19,7 +19,7 @@ public class Main {
         }
     }
 
-    static int run(String[] args, PrintStream out, PrintStream err, Runtime runtime) {
+    public static int run(String[] args, PrintStream out, PrintStream err, Runtime runtime) {
         if (args.length < 1) {
             err.println("Usage: java CORE.Main <input-file> [<output-text-file>] [<output-png-file>]");
             return 1;
@@ -64,7 +64,7 @@ public class Main {
         }
     }
 
-    interface Runtime {
+    public interface Runtime {
         SimulationConfig read(String inputPath);
 
         Simulation createSimulation(SimulationConfig config);

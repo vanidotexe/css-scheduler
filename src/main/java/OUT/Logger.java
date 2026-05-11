@@ -10,6 +10,7 @@ public class Logger {
         SYS_CALL,
         SWAP_IN,
         SWAP_OUT,
+        IDLE,
     }
 
     public static class Entry {

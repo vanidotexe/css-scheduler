@@ -91,7 +91,7 @@ class MainTest {
 
         assertEquals(2, status);
         assertEquals("", streams.stdout());
-        assertEquals("Simulation error: invalid input\n", streams.stderr());
+        assertEquals("Simulation error: invalid input" + System.lineSeparator(), streams.stderr());
     }
 
     @Test

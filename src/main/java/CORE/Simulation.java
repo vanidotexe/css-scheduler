@@ -31,11 +31,20 @@ public class Simulation {
     private int terminatedCount = 0;
 
     public Simulation(SimulationConfig config) {
+        this(config, makeCpus(config.processors), new Memory(config.ram), new Disk(config.diskRate));
+    }
+
+    public Simulation(SimulationConfig config, CPU[] cpus, Memory memory, Disk disk) {
         this.config = config;
-        this.cpus = new CPU[config.processors];
-        for (int i = 0; i < config.processors; i++) cpus[i] = new CPU(i);
-        this.memory = new Memory(config.ram);
-        this.disk = new Disk(config.diskRate);
+        this.cpus   = cpus;
+        this.memory = memory;
+        this.disk   = disk;
+    }
+
+    private static CPU[] makeCpus(int n) {
+        CPU[] arr = new CPU[n];
+        for (int i = 0; i < n; i++) arr[i] = new CPU(i);
+        return arr;
     }
 
     public Logger getLogger() { return logger; }

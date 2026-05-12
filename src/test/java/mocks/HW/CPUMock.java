@@ -3,20 +3,22 @@ package mocks.HW;
 import HW.CPU;
 
 public class CPUMock extends CPU {
-    private boolean forcedIdle = true;
+    public boolean assignCalled = false;
+    public boolean releaseCalled = false;
     public Object lastAssignedTask = null;
 
     public CPUMock(int id) { super(id); }
 
     @Override
-    public boolean isIdle() { return forcedIdle; }
-
-    public void setIdle(boolean idle) { this.forcedIdle = idle; }
+    public void assign(Object task, long until) {
+        this.assignCalled = true;
+        this.lastAssignedTask = task;
+        super.assign(task, until);
+    }
 
     @Override
-    public void assign(Object task, long until) {
-        this.lastAssignedTask = task;
-        this.forcedIdle = false;
-        super.assign(task, until);
+    public void release() {
+        this.releaseCalled = true;
+        super.release();
     }
 }

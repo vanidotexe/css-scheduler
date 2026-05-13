@@ -16,13 +16,11 @@ public class CPUTest {
         cpu = new CPU(CPU_ID);
     }
 
-    // --- TESTE PENTRU DATE CORECTE (Happy Path) ---
 
     @Test
     public void testInitialization() {
-        // Verificăm dacă procesorul pornește în starea corectă
         assertEquals(CPU_ID, cpu.id);
-        assertTrue(cpu.isIdle(), "CPU ar trebui să fie idle la inițializare");
+        assertTrue(cpu.isIdle(), "CPU should be in IDLE");
         assertNull(cpu.getCurrent());
         assertEquals(0, cpu.getBusyUntil());
     }
@@ -34,7 +32,6 @@ public class CPUTest {
 
         cpu.assign(mockProcess, finishTime);
 
-        // Verificăm dacă datele au fost salvate corect
         assertFalse(cpu.isIdle());
         assertEquals(mockProcess, cpu.getCurrent());
         assertEquals(finishTime, cpu.getBusyUntil());
@@ -45,37 +42,31 @@ public class CPUTest {
         cpu.assign(new Object(), 50);
         cpu.release();
 
-        // Verificăm dacă starea revine la idle
         assertTrue(cpu.isIdle());
         assertNull(cpu.getCurrent());
         assertEquals(0, cpu.getBusyUntil());
     }
 
-    // --- TESTE PENTRU DATE INCORECTE (Error Handling) ---
+    //Error Handling
 
     @Test
     public void testAssignNullTask() {
-        // Cerința: "handling incorrect input data".
-        // Metoda assign are assert task != null.
         assertThrows(AssertionError.class, () -> {
             cpu.assign(null, 10);
-        }, "Ar trebui să arunce AssertionError dacă task-ul este null");
+        }, "AssertionError if task is null");
     }
 
     @Test
     public void testAssignNegativeTime() {
-        // Cerința: "handling incorrect input data".
-        // Metoda assign are assert until >= 0.
         assertThrows(AssertionError.class, () -> {
             cpu.assign(new Object(), -5);
-        }, "Ar trebui să arunce AssertionError pentru timp negativ");
+        }, "AssertionError for negative time");
     }
 
     @Test
     public void testConstructorWithInvalidId() {
-        // Verificăm dacă constructorul protejează împotriva ID-urilor negative
         assertThrows(AssertionError.class, () -> {
             new CPU(-1);
-        }, "Constructorul nu ar trebui să accepte ID-uri negative");
+        }, "Constructor should not accept negative IDs");
     }
 }

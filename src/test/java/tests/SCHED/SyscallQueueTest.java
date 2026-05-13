@@ -25,8 +25,6 @@ public class SyscallQueueTest {
         return new SystemProcess.Syscall(makeProcess(processId), duration);
     }
 
-    // --- Happy Path ---
-
     @Test
     public void testInitiallyEmpty() {
         assertTrue(queue.isEmpty());
@@ -97,7 +95,6 @@ public class SyscallQueueTest {
 
     @Test
     public void testRemoveLastElementThenReAdd() {
-        // Verifica ca pointerele head/tail se reseteaza corect dupa ce coada se goleste
         SystemProcess.Syscall s1 = makeSyscall(1, 5);
         SystemProcess.Syscall s2 = makeSyscall(2, 10);
         queue.addLast(s1);
@@ -109,11 +106,9 @@ public class SyscallQueueTest {
         assertTrue(queue.isEmpty());
     }
 
-    // --- Incorrect Input ---
-
     @Test
     public void testAddLastNullThrowsAssertionError() {
         assertThrows(AssertionError.class, () -> queue.addLast(null),
-                "addLast cu null ar trebui sa arunce AssertionError");
+                "addLast with null should throw AssertionError");
     }
 }

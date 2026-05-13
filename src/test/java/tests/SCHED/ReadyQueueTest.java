@@ -20,7 +20,6 @@ public class ReadyQueueTest {
         return new UserProcess(id, 0, 100, new int[]{10}, new int[]{});
     }
 
-    // --- Happy Path ---
 
     @Test
     public void testInitiallyEmpty() {
@@ -93,7 +92,6 @@ public class ReadyQueueTest {
 
     @Test
     public void testIsEmptyAndSizeConsistentAfterRemoveOnEmpty() {
-        // Scoaterea dintr-o coadă goala nu trebuie sa modifice size-ul
         queue.removeFirst();
         assertTrue(queue.isEmpty());
         assertEquals(0, queue.size());
@@ -101,7 +99,6 @@ public class ReadyQueueTest {
 
     @Test
     public void testRemoveLastElementThenReAdd() {
-        // Verifica ca pointerele head/tail se reseteaza corect dupa ce coada se goleste
         UserProcess p1 = makeProcess(1);
         UserProcess p2 = makeProcess(2);
         queue.addLast(p1);
@@ -112,8 +109,6 @@ public class ReadyQueueTest {
         assertEquals(p2, queue.removeFirst());
         assertTrue(queue.isEmpty());
     }
-
-    // --- Incorrect Input ---
 
     @Test
     public void testAddLastNullThrowsAssertionError() {

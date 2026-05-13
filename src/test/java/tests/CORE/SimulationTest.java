@@ -29,8 +29,6 @@ public class SimulationTest {
         return new Simulation(config, cpus, new MemoryMock(config.ram), new DiskMock(config.diskRate));
     }
 
-    // --- Happy Path ---
-
     @Test
     public void testGetLoggerNotNull() {
         Simulation sim = makeSimulation(new SimulationConfigMock());
@@ -45,11 +43,10 @@ public class SimulationTest {
 
     @Test
     public void testRunWithNoProcessesCompletes() {
-        // Lista goala de procese, simularea trebuie sa se termine dupa primul SysRelease
         SimulationConfig config = makeConfig(1, 1024, 10, 100, 50, new ArrayList<>());
         Simulation sim = makeSimulation(config);
         assertDoesNotThrow(sim::run);
-        assertEquals(100, sim.getClock()); // clock avanseaza la sysPeriod
+        assertEquals(100, sim.getClock());
     }
 
     @Test
@@ -59,7 +56,7 @@ public class SimulationTest {
         SimulationConfig config = makeConfig(1, 1024, 100, 1000, 100, procs);
         Simulation sim = makeSimulation(config);
         sim.run();
-        assertTrue(sim.getClock() > 0, "Clock-ul trebuie sa avanseze dupa rulare");
+        assertTrue(sim.getClock() > 0, "Clock should advance");
     }
 
     @Test
@@ -79,7 +76,7 @@ public class SimulationTest {
         Simulation sim = makeSimulation(config);
         sim.run();
         assertFalse(sim.getLogger().getEntries().isEmpty(),
-                "Logger-ul trebuie sa contina cel putin o inregistrare");
+                "Logger should contain at least one registration.");
     }
 
     @Test
@@ -91,8 +88,6 @@ public class SimulationTest {
         Simulation sim = makeSimulation(config);
         assertDoesNotThrow(sim::run);
     }
-
-    // --- Mock interaction verification ---
 
     @Test
     public void testMemoryAdmitCalledOnRun() {
@@ -129,11 +124,8 @@ public class SimulationTest {
         assertTrue(cpu.assignCalled, "Simulation should assign a task to the CPU");
     }
 
-    // --- Incorrect Input ---
-
     @Test
     public void testProcessExceedsRamThrowsSimulationException() {
-        // Process cere 200 MB, dar RAM-ul este de 10 MB
         List<UserProcess> procs = new ArrayList<>();
         procs.add(new UserProcess(1, 0, 200, new int[]{10}, new int[]{}));
         SimulationConfig config = makeConfig(1, 10, 10, 100, 1, procs);
@@ -141,6 +133,6 @@ public class SimulationTest {
 
         SimulationException ex = assertThrows(SimulationException.class, sim::run);
         assertTrue(ex.getMessage().contains("requires more memory"),
-                "Mesajul exceptiei trebuie sa mentioneze insuficienta memoriei");
+                "Not enough memory");
     }
 }

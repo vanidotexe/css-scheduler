@@ -20,8 +20,6 @@ public class MemoryTest {
         memory = new Memory(CAPACITY);
     }
 
-    // --- TESTE DE BAZĂ (Gestiunea Spațiului) ---
-
     @Test
     public void testAdmitAndFreeSpace() {
         UserProcessMock p = new UserProcessMock(1, 400);
@@ -36,31 +34,25 @@ public class MemoryTest {
     public void testAdmitOverCapacity() {
         UserProcessMock p = new UserProcessMock(1, 1100);
         assertThrows(SimulationException.class, () -> memory.admit(p),
-                "Ar trebui să arunce excepție dacă procesul depășește RAM-ul total");
+                "Exception if process exceeds total RAM");
     }
-
-    // --- TESTE PENTRU LOGICA LRU (Least Recently Used) ---
 
     @Test
     public void testTouchAndLRUOrder() {
         UserProcessMock p1 = new UserProcessMock(1, 100);
-        UserProcessMock p2 = new UserProcessMock(2, 100);
+        UserProcessMock p2 = new UserProcessMock(2, 800);
         UserProcessMock p3 = new UserProcessMock(3, 100);
 
-        memory.admit(p1); // Ordinea (Head -> Tail): P1
-        memory.admit(p2); // Ordinea: P2, P1
-        memory.admit(p3); // Ordinea: P3, P2, P1
+        memory.admit(p1);
+        memory.admit(p2);
+        memory.admit(p3);
 
-        // În acest moment, P1 este cel mai vechi (LRU)
-        memory.touch(p1); // P1 devine cel mai recent: P1, P3, P2
+        memory.touch(p1);
 
-        // Planificăm evacuarea a 100 bytes. Cel mai vechi acum e P2.
-        List<MODEL.UserProcess> plan = memory.planEvictions(100, p -> false);
+        List<MODEL.UserProcess> plan = memory.planEvictions(800, p -> false);
         assertEquals(1, plan.size());
-        assertEquals(p2, plan.get(0), "P2 ar trebui să fie victima deoarece P1 a fost 'atins' recent");
+        assertEquals(p2, plan.get(0), "P2 should be evicted because P1 is running");
     }
-
-    // --- TESTE PENTRU PLANIFICAREA EVACUĂRII (SWAP) ---
 
     @Test
     public void testPlanEvictionsWithProtection() {
@@ -69,12 +61,11 @@ public class MemoryTest {
         memory.admit(p1);
         memory.admit(p2);
 
-        // RAM plin. Încercăm să aducem P3 (300 bytes), dar P1 (cel mai vechi) este protejat (pinned)
         List<MODEL.UserProcess> plan = memory.planEvictions(300, p -> p.id == p1.id);
 
         assertNotNull(plan);
         assertEquals(1, plan.size());
-        assertEquals(p2, plan.get(0), "Ar trebui să sară peste P1 (protejat) și să-l aleagă pe P2");
+        assertEquals(p2, plan.get(0), "P1 is protected, P2 should be evicted");
     }
 
     @Test
@@ -82,24 +73,21 @@ public class MemoryTest {
         UserProcessMock p1 = new UserProcessMock(1, 500);
         memory.admit(p1);
 
-        // Avem nevoie de 600 bytes, dar singurul proces rezident (500b) este protejat
         List<MODEL.UserProcess> plan = memory.planEvictions(600, p -> true);
-        assertNull(plan, "Ar trebui să returneze null dacă nu poate elibera suficient spațiu");
+        assertNull(plan, "Should return null is space cannot be freed");
     }
-
-    // --- TESTE PENTRU MANIPULARE INCORECTĂ (Error Handling) ---
 
     @Test
     public void testEvictNonResident() {
         UserProcessMock p = new UserProcessMock(1, 100);
         assertThrows(SimulationException.class, () -> memory.evict(p),
-                "Nu poți da afară un proces care nu este în RAM");
+                "Cannot evict a process that is not on RAM");
     }
 
     @Test
     public void testTouchNonResident() {
         UserProcessMock p = new UserProcessMock(1, 100);
         assertThrows(SimulationException.class, () -> memory.touch(p),
-                "Nu poți actualiza timpul de acces pentru un proces care nu este în RAM");
+                "You cannot update the access time for a process that is not in RAM.");
     }
 }

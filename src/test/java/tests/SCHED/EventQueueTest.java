@@ -16,8 +16,6 @@ public class EventQueueTest {
         queue = new EventQueue();
     }
 
-    // --- Happy Path ---
-
     @Test
     public void testInitiallyEmpty() {
         assertTrue(queue.isEmpty());
@@ -56,9 +54,9 @@ public class EventQueueTest {
 
     @Test
     public void testPollReturnsEventsInSeqOrderWhenTimesEqual() {
-        Event e1 = new Event.SysRelease(10, queue.nextSeq()); // seq=0
-        Event e2 = new Event.SysRelease(10, queue.nextSeq()); // seq=1
-        Event e3 = new Event.SysRelease(10, queue.nextSeq()); // seq=2
+        Event e1 = new Event.SysRelease(10, queue.nextSeq());
+        Event e2 = new Event.SysRelease(10, queue.nextSeq());
+        Event e3 = new Event.SysRelease(10, queue.nextSeq());
         queue.add(e3);
         queue.add(e1);
         queue.add(e2);
@@ -88,7 +86,6 @@ public class EventQueueTest {
 
     @Test
     public void testGrowsWhenCapacityExceeded() {
-        // Capacitatea interna implicita este 16, adaugam 20 de evenimente pentru a forta grow()
         for (int i = 0; i < 20; i++) {
             queue.add(new Event.SysRelease(i, queue.nextSeq()));
         }
@@ -114,7 +111,6 @@ public class EventQueueTest {
 
     @Test
     public void testGrowthAtExactCapacityBoundary() {
-        // 16 umple array-ul intern exact, al 17-lea element trebuie sa declanseze grow()
         for (int i = 16; i >= 1; i--) {
             queue.add(new Event.SysRelease(i, queue.nextSeq()));
         }
@@ -129,7 +125,6 @@ public class EventQueueTest {
 
     @Test
     public void testHeapInvariantAfterMixedInsertions() {
-        //fiecare poll() trebuie sa returneze minimul ramas
         int[] times = {15, 3, 8, 1, 20, 7, 12, 4, 9, 6};
         for (int t : times) queue.add(new Event.SysRelease(t, queue.nextSeq()));
 
@@ -146,6 +141,6 @@ public class EventQueueTest {
     @Test
     public void testAddNullThrowsAssertionError() {
         assertThrows(AssertionError.class, () -> queue.add(null),
-                "Adaugarea unui event null ar trebui sa arunce AssertionError");
+                "Null event should throw AssertionError");
     }
 }

@@ -11,15 +11,13 @@ public class SystemProcessTest {
     public void testSyscallValidation() {
         UserProcessMock requester = new UserProcessMock(1, 100);
 
-        // Testăm crearea corectă
         SystemProcess.Syscall sc = new SystemProcess.Syscall(requester, 50);
         assertEquals(50, sc.duration);
         assertEquals(requester, sc.requester);
 
-        // Testăm precondiția: durată negativă (Data incorectă)
         assertThrows(AssertionError.class, () -> {
             new SystemProcess.Syscall(requester, -10);
-        }, "Durata unui syscall trebuie să fie pozitivă");
+        }, "Syscall duration should be positive");
     }
 
     @Test

@@ -13,8 +13,6 @@ public class EventTest {
         return new UserProcess(1, 0, 100, new int[]{10}, new int[]{});
     }
 
-    // --- Happy Path ---
-
     @Test
     public void testProcessReleaseStoresFields() {
         UserProcess p = makeProcess();
@@ -76,12 +74,10 @@ public class EventTest {
         assertEquals(0, e.compareTo(e));
     }
 
-    // --- Incorrect Input ---
-
     @Test
     public void testNegativeTimeSysReleaseThrows() {
         assertThrows(AssertionError.class, () -> new Event.SysRelease(-1, 0),
-                "Timp negativ nu este permis");
+                "Negative time not permitted");
     }
 
     @Test
